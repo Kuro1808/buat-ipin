@@ -255,7 +255,7 @@
         }
 
         .quote-text {
-            font-size: 1.1rem;
+            font-size: 1rem !important;
             line-height: 1.4;
             color: var(--text-color);
             margin: 0;
@@ -381,8 +381,10 @@
         .tv-popup {
             position: fixed !important;
             top: 50% !important;
-            left: 49.5% !important;
-            transform: translate(-50%, -50%) !important;
+            left: 50% !important;
+            margin-left: -175px !important;
+            margin-top: -150px !imprtant;
+            transform: none;
             width: 350px !important;
             max-width: 350px !important;
             z-index: 3001;
@@ -452,15 +454,18 @@
         .final-message {
             position: fixed !important;
             top: 50% !important;
-            left: 48% !important;
+            left: 50% !important;
+            margin-left: 0 !important;
+            margin-top: 0!important
             transform: translate(-50%, -50%) !important;
             background: var(--bg-color);
-            padding: 30px;
+            padding: 20px !important;
             border: 2px solid var(--text-color);
             text-align: center;
             font-family: 'Indie Flower';
             box-shadow: 15px 15px 0px var(--text-color);
-            width: 80% !important;
+            width: 85% !important;
+            box-sizing: border-box;
             max-width: 400px;
             z-index: 9999;
             display: none;
