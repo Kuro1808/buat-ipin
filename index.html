@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" , maximum-scale="1.0,user-scalable=no">
     <title>Template Ultah Kakak - Vintage</title>
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Special+Elite&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Special+Elite&family=Permanent+Marker&family=Nanum+Pen+Script&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -21,9 +22,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
             height: 100vh;
             margin: 0;
+            padding: 0;
             overflow: hidden;
+            touch-action: none;
+            overflow: hidden;
+            position: relative;
             /* Mencegah scroll saat foto menyebar */
             font-family: 'Special Elite', serif;
             color: var(--text-color);
@@ -161,10 +167,11 @@
             position: absolute;
             width: 150px;
             /* Ukuran template lebih kecil biar muat banyak */
-            height: 180px;
+            height: auto !important;
+            min-height: 200px;
             background-color: white;
-            padding: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 10px 10px 20px 10px !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             border-radius: 2px;
 
             /* Posisi Awal (Di dalam amplop) */
@@ -173,7 +180,7 @@
             transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s;
 
             z-index: 100;
-            display: flex;
+            display: block !important;
             flex-direction: column;
             align-items: center;
         }
@@ -181,7 +188,7 @@
         /* Bagian Foto (Sementara Emoji) */
         .photo-placeholder {
             width: 100%;
-            height: 130px;
+            height: 120px;
             background-color: #ddd;
             /* Abu-abu kertas foto */
             display: flex;
@@ -194,33 +201,70 @@
 
         /* Bagian Caption (Tulisan Tangan) */
         .caption {
-            font-family: 'Indie Flower', cursive;
+            font-family: 'Permanent Marker', cursive !important;
             font-size: 1rem;
-            margin-top: 10px;
+            color: #333;
+            margin-top: 15px !important;
+            line-height: 1.2;
+            flex-direction: column;
             text-align: center;
             width: 100%;
+            transform: rotate(-2deg);
+            opacity: 0.9;
+            padding: 0 5px;
+            word-wrap: break-word;
         }
 
-        /* --- QUOTES TEXT (TEMPLATE) --- */
+        .caption-small {
+            font-family: 'Permanent Marker', cursive !important;
+            font-size: 0.7rem !important;
+            margin-bottom: 2px;
+            display: block;
+            opacity: 0.7;
+            color: #555;
+        }
+
+        /* --- QUOTES TEXT (FIXED POSISI) --- */
         .quote-container {
             position: absolute;
-            bottom: 15vh;
-            /* Sedikit di atas bawah layar */
-            width: 80%;
+            bottom: 2vh !important;
+            /* Kunci di paling bawah layar */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 150px;
+            /* Kasih ruang tinggi ke bawah */
+            display: block !important;
+            justify-content: center;
+            align-items: center;
+            /* Teks akan ngumpul di tengah area bawah ini */
             text-align: center;
-            z-index: 100;
+            z-index: 10;
             pointer-events: none;
         }
 
+        @media screen and (max-width: 600px) {
+            .quote-container {
+                bottom: 80px !important;
+                width: 90%;
+            }
+
+            .quote-text {
+                font-size: 1rem !important;
+            }
+        }
+
         .quote-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1.5s, transform 1.5s;
-            margin-bottom: 10px;
-            display: none;
-            /* Sembunyi total di awal */
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            /* Pastikan dia block agar enter bekerja */
+
+            /* INI KUNCINYA */
+            white-space: pre-wrap !important;
+            word-wrap: break-word;
         }
 
         /* --- KELAS UNTUK MEMUNCULKAN ELEMENT (Dipicu JS) --- */
@@ -228,6 +272,13 @@
             opacity: 1;
             pointer-events: all;
             /* Sekarang bisa diklik/di-hover */
+        }
+
+        .polaroid-img {
+            width: 100%;
+            height: 120%;
+            object-fit: cover;
+            display: block;
         }
 
         .quote-text.show-fade {
@@ -300,7 +351,7 @@
             /* Sembunyi di awal */
             display: none;
             transition: opacity 1.5s, transform 0.3s;
-            z-index: 5000;
+            z-index: 9999 !important;
             pointer-events: all !important;
         }
 
@@ -328,36 +379,39 @@
         }
 
         .tv-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
+            position: fixed !important;
+            top: 50% !important;
+            left: 49.5% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 350px !important;
+            max-width: 350px !important;
             z-index: 3001;
             display: none;
             opacity: 0;
-            transition: all 0.5s ease;
+            transition: opacity 0.5s ease;
         }
 
         .tv-case {
             background: #4e342e;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 25px;
+            border-radius: 20px;
             box-shadow: inset 0 0 20px #000, 10px 10px 30px rgba(0, 0, 0, 0.5);
             border: 8px solid #3e2723;
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-sizing: border-box;
         }
 
         .tv-screen {
-            width: 300px;
-            height: 220px;
+            width: 280px;
+            height: 200px;
             background: #000;
-            border-radius: 10%;
+            border-radius: 15px;
             /* Aku ubah dikit biar kotak tapi tumpul */
             position: relative;
             overflow: hidden;
-            border: 10px solid #2b1d1a;
+            border: 8px solid #2b1d1a;
         }
 
         .tv-off-screen {
@@ -396,9 +450,9 @@
         }
 
         .final-message {
-            position: fixed;
+            position: fixed !important;
             top: 50% !important;
-            left: 50% !important;
+            left: 48% !important;
             transform: translate(-50%, -50%) !important;
             background: var(--bg-color);
             padding: 30px;
@@ -406,9 +460,9 @@
             text-align: center;
             font-family: 'Indie Flower';
             box-shadow: 15px 15px 0px var(--text-color);
-            width: 80%;
+            width: 80% !important;
             max-width: 400px;
-            z-index: 9999 !important;
+            z-index: 9999;
             display: none;
         }
 
@@ -429,10 +483,10 @@
         }
 
         .final-message {
-            position: fixed;
-            top: 5%;
-            left: 50%;
-            transform: translate(-50% -50%);
+            position: fixed !important;
+            top: 50% !important;
+            left: 48% !important;
+            transform: translate(-50% -50%) !important;
             background: var(--bg-color);
             padding: 40px 30px 30px 30px;
             border: 2px solid var(--text-color);
@@ -440,8 +494,42 @@
             display: none;
             text-align: center;
             box-shadow: 15px 15px 0px var(--text-color);
+            box-sizing: border-box;
             width: 70%;
             max-width: 400px;
+        }
+
+        /* Efek garis cahaya ✨ */
+        .tv-flash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0%;
+            height: 2px;
+            background-color: #fff;
+            box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            pointer-events: none;
+            transition: width 0.6s ease-out, height 0.6s ease-out;
+            opacity: 0.3s;
+        }
+
+        .tv-flash.active {
+            opacity: 1;
+            width: 100%;
+            /* Melebar ke samping */
+            height: 4px;
+            /* Sedikit menebal */
+        }
+
+        #myVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            display: none;
+            /* Wajib mulai dari 0 biar bisa fade-in */
         }
     </style>
 </head>
@@ -470,45 +558,68 @@
 
         <div class="gallery" id="gallery">
             <div class="polaroid" data-speed="1.0">
-                <div class="photo-placeholder">👶</div>
-                <p class="caption">Ganti teks caption 1</p>
+                <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                </div>
+                <p class="caption">
+                    <small style=" font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
+                    "GANTI INI"
+                </p>
             </div>
             <div class="polaroid" data-speed="1.2">
-                <div class="photo-placeholder">📸</div>
-                <p class="caption">Ganti teks caption 2</p>
+                <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                </div>
+                <p class="caption">
+                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
+                    "GANTI INI"
+                </p>
             </div>
             <div class="polaroid" data-speed="0.8">
-                <div class="photo-placeholder">🍕</div>
-                <p class="caption">Ganti teks caption 3</p>
+                <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                </div>
+                <p class="caption">
+                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
+                    "GANTI INI"
+                </p>
             </div>
             <div class="polaroid" data-speed="1.3">
-                <div class="photo-placeholder">👨‍👩‍👦</div>
-                <p class="caption">Ganti teks caption 4</p>
+                <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                </div>
+                <p class="caption"><small
+                        style="font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
+                    "GANTI INI"</p>
             </div>
             <div class="polaroid" data-speed="0.9">
-                <div class="photo-placeholder">🏆</div>
-                <p class="caption">Ganti teks caption 5</p>
+                <div class="photo-placeholder">
+                    <img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                </div>
+                <p class="caption">
+                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">2024.07.27</small>
+                    "for all days you didn't give up"
+                </p>
             </div>
             <div class="polaroid" data-speed="1.1">
-                <div class="photo-placeholder">🎁</div>
-                <p class="caption">Ganti teks caption 6</p>
+                <div class="photo-placeholder">
+                    <img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                </div>
+                <p class="caption">
+                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">
+                        TANGGAL</small>
+                    "GANTI INI"
+                </p>
             </div>
+
+            <div class="quote-container">
+            </div>
+
             <div id="hint" class="interaction-hint">Coba sentuh fotonya...</div>
             <button id="giftBtn" class="gift-button">Click me for🎁</button>
-        </div>
-
-        <div class="quote-container">
-            <p class="quote-text" id="q1">"Ganti teks quote 1 - Nostalgia ringan"</p>
-            <p class="quote-text" id="q2">"Ganti teks quote 2 - Mulai personal/jarak"</p>
-            <p class="quote-text" id="q3" style="font-weight: bold; font-size: 1.4rem;">"Ganti teks quote 3 - PUNCAK
-                EMOSI"</p>
-            <p class="quote-text" id="q4">"Ganti teks quote 4 - Doa/Harapan/HBD"</p>
         </div>
 
         <div id="overlay" class="overlay"></div>
         <div id="tv-popup" class="tv-popup">
             <div class="tv-case">
                 <div class="tv-screen">
+                    <div id="tv-flash" class="tv-flash"></div>
                     <div id="tv-static-screen" class="tv-off-screen"></div>
                     <video id="myVideo" width="100%" height="100%">
                         <source src="video-ultah.mp4" type="video/mp4">
@@ -552,12 +663,20 @@
 
         // Daftar 6 Quotes (Sesuaikan teksnya di sini)
         const photoQuotes = [
-            "Ini pesan untuk foto pertama... (Masa kecil/awal)",
-            "Pesan untuk foto kedua... (Kenangan manis)",
-            "Pesan untuk foto ketiga... (Momen seru)",
-            "Pesan untuk foto keempat... (Keluarga/Teman)",
-            "Pesan untuk foto kelima... (Prestasi/Kebanggaan)",
-            "Pesan untuk foto terakhir... (Harapan & Doa)"
+            `Pesan foto 1
+baris baru di sini`,
+
+            `Pesan foto 2`,
+
+            `Pesan foto 3`,
+
+            `Pesan foto 4`,
+
+            `Dari dulu gua tau sih lu bakal sampe disini.
+Tapi tetep aja liat lu bener-bener berdiri di titik ini bikin gua terharu.
+So proud of you, Pin.`,
+
+            `Pesan terakhir`
         ];
 
         function spreadPolaroids() {
@@ -600,21 +719,20 @@
         }
 
         function handlePhotoInteraction(index, element) {
-            // 1. Sembunyikan instruksi atas
             if (hint) hint.style.opacity = "0";
 
-            // 2. Update Teks Quote di bawah
-            quoteContainer.innerHTML = ''; // Bersihkan yang lama
+            quoteContainer.innerHTML = '';
             const newQuote = document.createElement('p');
             newQuote.className = 'quote-text show-fade';
-            newQuote.style.display = 'block';
-            newQuote.innerText = photoQuotes[index];
+
+            // Gunakan textContent agar format Enter dari backtick terbaca sempurna
+            newQuote.textContent = photoQuotes[index];
+
             quoteContainer.appendChild(newQuote);
 
-            // 3. Catat jumlah klik untuk tombol kado
             clickedPhotos.add(index);
             if (clickedPhotos.size === polaroids.length) {
-                showGiftButton();
+                setTimeout(showGiftButton, 5000);
             }
         }
 
@@ -636,7 +754,7 @@
                         { transform: 'translateX(-50%) scale(1)' }
                     ], { duration: 1000, iterations: Infinity });
                 }, 50);
-            }, 1000);
+            }, 5);
         }
 
         // --- SEMUA EVENT LISTENER TARUH DI BAWAH SINI ---
@@ -644,26 +762,70 @@
         // Klik Tombol Kado
         giftBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // Biar gak bentrok sama klik gallery
+            giftBtn.style.transform = "translateX(-50%) scale(0.9)";
+            giftBtn.style.opacity = "0.5";
             overlay.style.display = 'block';
             tvPopup.style.display = 'block';
+
             setTimeout(() => {
-                tvPopup.style.opacity = '1';
-                tvPopup.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, 100);
+                giftBtn.style.display = 'none';
+                overlay.style.display = 'block';
+                tvPopup.style.display = 'block';
+
+                setTimeout(() => {
+                    tvPopup.style.opacity = '1';
+                    tvPopup.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 1500);
+            })
         });
 
         // Klik Tombol ON TV
         document.getElementById('tvOnBtn').addEventListener('click', function () {
-            this.style.backgroundColor = '#4caf50';
-            this.innerText = "OFF";
-            tvStatic.style.opacity = '0';
+            let btn = this;
+            let v = document.getElementById('myVideo');
+            let flash = document.getElementById('tv-flash');
 
-            const music = document.getElementById('bgMusic');
-            music.volume = 0.2;
+            btn.innerText = "...";
+            btn.style.pointerEvents = "none";
 
-            video.play().catch(error => {
-                console.log("Video gagal play otomatis:", error);
-            });
+            // 1. Munculkan garis kilatan ✨
+            setTimeout(() => {
+                flash.classList.add('active');
+            }, 500);
+
+            // 2. Hilangkan garis, lalu mulai jitter
+            setTimeout(() => {
+                flash.classList.remove('active');
+                flash.style.opacity = "0";
+
+                // Mulai Jitter (Semut TV)
+                let jitter = setInterval(() => {
+                    tvStatic.style.opacity = Math.random();
+                }, 50);
+
+                // 3. FINAL: TV Nyala & Video Fade In
+                setTimeout(() => {
+                    clearInterval(jitter);
+                    tvStatic.style.display = 'none';
+
+                    // --- PROSES FADE IN VIDEO DI SINI ---
+                    v.style.display = 'block';
+                    v.play();
+
+                    // Delay dikit biar transition-nya jalan
+                    setTimeout(() => {
+                        v.style.transition = "opacity 2s ease";
+                        v.style.opacity = "1";
+                    }, 50);
+
+                    btn.style.backgroundColor = '#4caf50';
+                    btn.innerText = "OFF";
+                    btn.style.pointerEvents = "auto";
+                    document.getElementById('bgMusic').volume = 0.2;
+
+                }, 2000); // Durasi jitter (2 detik)
+
+            }, 1300); // Garis putih ✨ muncul selama 0.8 detik (1300 - 500)
         });
 
         // Klik Close
