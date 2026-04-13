@@ -251,11 +251,19 @@
 
             .quote-text {
                 font-size: 1rem !important;
+                line-height: 1.4;
+                color: var(--text-color);
+                margin: 0;
+                padding: 0;
+                white-space: pre-warp !important;
+                word-wrap: break-word;
+                text-shadow: 2px 2px 4px var(--bg-color), -2px -2 px -4px var(--bg-color);
+                font-weight: bold;
             }
         }
 
         .quote-text {
-            font-size: 1rem !important;
+            font-size: 1.1rem;
             line-height: 1.4;
             color: var(--text-color);
             margin: 0;
@@ -289,15 +297,17 @@
         }
 
         /* --- PERBAIKAN HOVER/FOCUS FOTO --- */
-        .polaroid:hover,
-        .polaroid.active {
-            z-index: 500 !important;
-            /* Kita paksa translate ke (0,0) relatif terhadap dirinya sendiri 
-               tapi karena asalnya dari penyebaran, kita gunakan kalkulasi 
-               untuk membawanya ke pusat pandangan */
-            transform: translate(0, -50px) scale(1.3) rotate(0deg) !important;
-            transition: transform 0.5s ease;
-            cursor: pointer;
+        .polaroid:hover {
+            transform: none;
+        }
+
+        .polaroid.active-photo {
+            z-index: 999 !important;
+            top: 45% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) scale(1.5) rotate(0deg) !important;
+            transition: all 0.5s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
         /* Tambahan sedikit agar quote-container bisa menerima update teks */
@@ -381,10 +391,8 @@
         .tv-popup {
             position: fixed !important;
             top: 50% !important;
-            left: 50% !important;
-            margin-left: -175px !important;
-            margin-top: -150px !imprtant;
-            transform: none;
+            left: 49.5% !important;
+            transform: translate(-50%, -50%) !important;
             width: 350px !important;
             max-width: 350px !important;
             z-index: 3001;
@@ -454,18 +462,15 @@
         .final-message {
             position: fixed !important;
             top: 50% !important;
-            left: 50% !important;
-            margin-left: 0 !important;
-            margin-top: 0!important
+            left: 48% !important;
             transform: translate(-50%, -50%) !important;
             background: var(--bg-color);
-            padding: 20px !important;
+            padding: 30px;
             border: 2px solid var(--text-color);
             text-align: center;
             font-family: 'Indie Flower';
             box-shadow: 15px 15px 0px var(--text-color);
-            width: 85% !important;
-            box-sizing: border-box;
+            width: 80% !important;
             max-width: 400px;
             z-index: 9999;
             display: none;
@@ -684,41 +689,41 @@ So proud of you, Pin.`,
             `Pesan terakhir`
         ];
 
+
         function spreadPolaroids() {
+            const isMobile = window.innerWidth <= 600;
+            const total = polaroids.length;
+
             polaroids.forEach((p, index) => {
-                const totalPhotos = polaroids.length;
-                const angle = -60 + (index * (120 / (totalPhotos - 1)));
-                const radius = window.innerWidth <= 600 ? 150 : 220;
-                const posX = Math.sin(angle * Math.PI / 180) * radius;
-                const posY = (-Math.cos(angle * Math.PI / 180) * radius) + 50;
-                const delay = index * 500;
+                // Sudut sebaran tetap acak biar berantakan
+                const angle = (index * (360 / total)) + (Math.random() * 20);
+
+                // --- LOGIKA DINAMIS ---
+                // Di PC, kita kasih radius X yang JAUH lebih lebar biar fotonya menyebar ke samping
+                const radiusX = isMobile ? (window.innerWidth * 0.3) : (window.innerWidth * 0.25);
+
+                // Radius Y di PC kita bikin sedikit lebih lebar tapi tetap dijaga batas atasnya
+                const radiusY = isMobile ? (window.innerHeight * 0.15) : (window.innerHeight * 0.18);
+
+                const variance = 0.8 + (Math.random() * 0.4);
+
+                const posX = Math.cos(angle * Math.PI / 180) * radiusX * variance;
+
+                // posY: Di PC kita geser lebih ke atas lagi biar area quotes di bawah surat bener-bener plong
+                const posY = (Math.sin(angle * Math.PI / 180) * radiusY * variance) - (isMobile ? 120 : 130);
+
+                const randomRotate = (Math.random() * 40) - 20;
+                const delay = index * 300;
 
                 setTimeout(() => {
                     p.style.opacity = "1";
-                    p.style.transform = `scale(1) translate(${posX}px, ${posY}px) rotate(${angle}deg)`;
                     p.style.zIndex = 100 + index;
+                    p.style.transform = `translate(${posX}px, ${posY}px) rotate(${randomRotate}deg) scale(1)`;
                     p.classList.add('spin-out');
 
-                    p.style.setProperty('--target-x', `${posX}px`);
-                    p.style.setProperty('--target-y', `${posY}px`);
-
-                    if (index === totalPhotos - 1) {
-                        setTimeout(() => {
-                            const hint = document.getElementById('hint');
-                            if (hint) {
-                                hint.style.opacity = "1";
-                            }
-                        }, 1000);
-                    }
-
-                    // EVENT: Klik Foto munculkan Quote
                     p.addEventListener('click', () => {
                         handlePhotoInteraction(index, p);
                     });
-
-                    if (index === totalPhotos - 1) {
-                        setTimeout(() => { if (hint) hint.style.opacity = "1"; }, 1000);
-                    }
                 }, delay);
             });
         }
@@ -726,17 +731,21 @@ So proud of you, Pin.`,
         function handlePhotoInteraction(index, element) {
             if (hint) hint.style.opacity = "0";
 
+            // Reset foto lain biar gak numpuk pas di-zoom
+            polaroids.forEach(photo => photo.classList.remove('active-photo'));
+
+            // Aktifkan zoom di foto yang diklik
+            element.classList.add('active-photo');
+
             quoteContainer.innerHTML = '';
             const newQuote = document.createElement('p');
             newQuote.className = 'quote-text show-fade';
-
-            // Gunakan textContent agar format Enter dari backtick terbaca sempurna
             newQuote.textContent = photoQuotes[index];
-
             quoteContainer.appendChild(newQuote);
 
             clickedPhotos.add(index);
             if (clickedPhotos.size === polaroids.length) {
+                // Tetap pakai jeda 5 detik sesuai keinginanmu
                 setTimeout(showGiftButton, 5000);
             }
         }
