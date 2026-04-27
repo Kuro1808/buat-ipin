@@ -787,9 +787,13 @@
                 <div class="tv-screen">
                     <div id="tv-flash" class="tv-flash"></div>
                     <div id="tv-static-screen" class="tv-off-screen"></div>
-                    <video id="myVideo" width="100%" height="100%">
-                        <source src="video-ultah.mp4" type="video/mp4">
-                    </video>
+
+                    <div id="videoContainer" style="width:100%; height:100%; display:none; opacity:0;">
+                        <iframe id="ytPlayer" width="100%" height="100%"
+                            src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&rel=0&controls=0&showinfo=0&autoplay=1&mute=1"
+                            frameborder="0" allow="autoplay; encrypted-media" style="object-fit: cover;">
+                        </iframe>
+                    </div>
                 </div>
                 <div class="tv-controls">
                     <button id="tvOnBtn" class="tv-knob">ON</button>
@@ -960,32 +964,32 @@ So proud of you, Pin.`,
             })
         });
 
-        // Klik Tombol ON TV (Ganti satu blok ini ya)
+        // Klik Tombol ON TV (VERSI YOUTUBE)
         document.getElementById('tvOnBtn').addEventListener('click', function () {
             let btn = this;
-            let v = document.getElementById('myVideo');
+            let container = document.getElementById('videoContainer');
+            let ytPlayer = document.getElementById('ytPlayer');
             let flash = document.getElementById('tv-flash');
-            const music = document.getElementById('bgMusic'); // <--- 1. Ambil musiknya
+            const music = document.getElementById('bgMusic');
 
             btn.innerText = "...";
             btn.style.pointerEvents = "none";
 
-            // --- 2. LOGIKA FADE DOWN (Mengecilkan suara pelan-pelan) ---
+            // 1. Fade Down Musik Latar
             let fadeDownMusic = setInterval(() => {
                 if (music.volume > 0.15) {
                     music.volume -= 0.05;
                 } else {
-                    music.volume = 0.2; // Berhenti di volume 0.1 (jadi backsound)
+                    music.volume = 0.2;
                     clearInterval(fadeDownMusic);
                 }
             }, 100);
 
-            // 1. Munculkan garis kilatan ✨ (Tetap sama)
+            // 2. Efek Kilatan TV
             setTimeout(() => {
                 flash.classList.add('active');
             }, 500);
 
-            // 2. Hilangkan garis, lalu mulai jitter (Tetap sama)
             setTimeout(() => {
                 flash.classList.remove('active');
                 flash.style.opacity = "0";
@@ -994,42 +998,50 @@ So proud of you, Pin.`,
                     tvStatic.style.opacity = Math.random();
                 }, 50);
 
-                // 3. FINAL: TV Nyala & Video Fade In (Tetap sama)
+                // 3. FINAL: Play YouTube & Fade In
                 setTimeout(() => {
                     clearInterval(jitter);
                     tvStatic.style.display = 'none';
 
-                    v.style.display = 'block';
-                    v.play();
+                    // Munculkan Container IFrame
+                    container.style.display = 'block';
+
+                    // Trik Play YouTube: Kirim perintah play lewat postMessage
+                    ytPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
 
                     setTimeout(() => {
-                        v.style.transition = "opacity 2s ease";
-                        v.style.opacity = "1";
+                        container.style.transition = "opacity 2s ease";
+                        container.style.opacity = "1";
                     }, 50);
 
                     btn.style.backgroundColor = '#4caf50';
                     btn.innerText = "OFF";
                     btn.style.pointerEvents = "auto";
-
-                    // --- 3. Kunci volumenya tetap di 0.1 ---
                     music.volume = 0.2;
 
                 }, 2000);
-
             }, 1300);
         });
 
-        // Klik Close
-        document.getElementById('closeTv').addEventListener('click', () => {
-            tvPopup.style.display = 'none';
-            overlay.style.display = 'none';
-            video.pause();
 
+        // Klik Close TV
+        document.getElementById('closeTv').addEventListener('click', () => {
+            const container = document.getElementById('videoContainer');
+            const ytPlayer = document.getElementById('ytPlayer');
             const music = document.getElementById('bgMusic');
 
+            tvPopup.style.display = 'none';
+            overlay.style.display = 'none';
+
+            // Berhentikan Video YouTube
+            ytPlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            container.style.opacity = "0";
+            container.style.display = "none";
+
+            // Fade In Musik Kembali
             let fadeInMusic = setInterval(() => {
-                if (music.volume < 0.9) {
-                    music.volume += 0.5;
+                if (music.volume < 0.8) {
+                    music.volume += 0.1;
                 } else {
                     music.volume = 0.9;
                     clearInterval(fadeInMusic);
