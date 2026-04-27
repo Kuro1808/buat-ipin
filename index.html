@@ -213,7 +213,21 @@
             opacity: 0.9;
             padding: 0 5px;
             word-wrap: break-word;
+            position: relative;
+            padding-bottom: 18px;
         }
+
+        .caption-code {
+            position: absolute;
+            display: block;
+            bottom: 3px;
+            right: 8px;
+            font-size: 0.65rem;
+            opacity: 0.75;
+            letter-spacing: 1px;
+            transform: rotate(-2deg);
+        }
+
 
         .caption-small {
             font-family: 'Permanent Marker', cursive !important;
@@ -541,12 +555,148 @@
             display: none;
             /* Wajib mulai dari 0 biar bisa fade-in */
         }
+
+        /* Container Utama Layar Countdown */
+        #mailbox-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            /* Senada sama background amplop */
+            z-index: 99999;
+            /* Paling depan biar nutupin semuanya */
+            display: flex;
+            justify-content: center;
+            transition: opacity 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mailbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        #mailbox-img {
+            width: 250px;
+            height: auto;
+            /* Efek blur bayangan di bawah gambar */
+            filter: drop-shadow(0 20px 15px rgba(0, 0, 0, 0.15));
+            transition: all 0.5s ease;
+        }
+
+        #mailbox-status {
+            font-family: 'Special Elite', serif;
+            font-size: 1rem;
+            margin-top: 20px;
+            color: var(--text-color);
+        }
+
+        #countdown-timer {
+            font-family: 'Special Elite', serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--wax-color);
+            margin-top: 10px;
+        }
+
+        /* --- RESPONSIVE POSISI --- */
+
+        /* Tampilan di HP (Tengah & Ngambang) */
+        @media screen and (max-width: 768px) {
+            #mailbox-gate {
+                align-items: center;
+                /* Di HP bener-bener center */
+            }
+
+            #mailbox-img {
+                animation: floating 3s ease-in-out infinite;
+                /* Animasi ngambang */
+            }
+        }
+
+        /* Tampilan di Laptop/PC (Tengah Bawah) */
+        @media screen and (min-width: 769px) {
+            #mailbox-gate {
+                align-items: flex-end;
+                /* Taruh di dasar layar */
+                padding-bottom: 10vh;
+                /* Kasih jarak dikit dari bawah */
+            }
+        }
+
+        /* Animasi Ngambang buat HP */
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Tombol Close Baru: Putih Bulat, X Hitam */
+        .close-photo-btn {
+            position: absolute;
+            top: -33px;
+            right: 0px;
+            width: 28px;
+            height: 28px;
+            background-color: #ffffff;
+            /* Putih bersih */
+            color: #000000;
+            /* X Hitam */
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Shadow biar lebih floating */
+            z-index: 1001;
+            border: none;
+            /* Bersih tanpa border */
+            transition: transform 0.2s ease;
+        }
+
+        .close-photo-btn:hover {
+            transform: scale(1.1);
+            /* Efek sedikit membesar pas disentuh */
+        }
+
+        /* Munculkan tombol hanya saat foto aktif */
+        .active-photo .close-photo-btn {
+            display: flex;
+        }
+
+        /* Munculkan tombol hanya saat foto punya class 'active-photo' */
+        .active-photo .close-photo-btn {
+            display: flex;
+        }
     </style>
 </head>
 
 <body>
 
 
+    <div id="mailbox-gate">
+        <div class="mailbox-content">
+            <img id="mailbox-img" src="mailbox-tutup.png" alt="Mailbox">
+            <p id="mailbox-status">Wait, still collecting archives...</p>
+            <div id="countdown-timer">00d : 00h : 00m : 00s</div>
+        </div>
+    </div>
+    </div>
 
     <div class="main-container">
 
@@ -571,51 +721,57 @@
                 <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
                 </div>
                 <p class="caption">
-                    <small style=" font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
-                    "GANTI INI"
+                    "for all days you didn't give up"
                 </p>
+                <span class="caption-code">R01 / 20xx</span>
+                <div class="close-photo-btn">×</div>
             </div>
             <div class="polaroid" data-speed="1.2">
                 <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
                 </div>
                 <p class="caption">
-                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
-                    "GANTI INI"
+                    "for all days you didn't give up"
                 </p>
+                <span class="caption-code">R02 / 20xx</span>
+                <div class="close-photo-btn">×</div>
             </div>
             <div class="polaroid" data-speed="0.8">
                 <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
                 </div>
                 <p class="caption">
-                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
-                    "GANTI INI"
+                    "for all days you didn't give up"
                 </p>
+                <span class="caption-code">R03 / 20xx</span>
+                <div class="close-photo-btn">×</div>
             </div>
             <div class="polaroid" data-speed="1.3">
-                <div class="photo-placeholder"><img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                <div class="photo-placeholder"><img src="ipin-4.jpeg" alt="Keterangan Foto" class="polaroid-img">
                 </div>
-                <p class="caption"><small
-                        style="font-family: 0.7rem; display: block; margin-bottom: 2px;">TANGGAL</small>
-                    "GANTI INI"</p>
+                <p class="caption">
+                    "for all days you didn't give up"
+                </p>
+                <span class="caption-code">R04 / 20xx</span>
+                <div class="close-photo-btn">×</div>
             </div>
             <div class="polaroid" data-speed="0.9">
                 <div class="photo-placeholder">
                     <img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
                 </div>
                 <p class="caption">
-                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">2024.07.27</small>
                     "for all days you didn't give up"
                 </p>
+                <span class="caption-code">R05 / 20xx</span>
+                <div class="close-photo-btn">×</div>
             </div>
             <div class="polaroid" data-speed="1.1">
                 <div class="photo-placeholder">
-                    <img src="ipin-5.jpeg" alt="Keterangan Foto" class="polaroid-img">
+                    <img src="ipin-6.jpeg" alt="Keterangan Foto" class="polaroid-img">
                 </div>
                 <p class="caption">
-                    <small style="font-family: 0.7rem; display: block; margin-bottom: 2px;">
-                        TANGGAL</small>
-                    "GANTI INI"
+                    "for all days you didn't give up"
                 </p>
+                <span class="caption-code">R06 / 20xx</span>
+                <div class="close-photo-btn">×</div>
             </div>
 
             <div class="quote-container">
@@ -644,12 +800,13 @@
         </div>
 
         <div id="personal-message" class="final-message">
-            <h3>Pesan Untukmu:</h3>
+            <h3>Ini pesan buat lu, Pin :</h3>
             <p>"Happy birthday ya!</p>
             <p>Maaf ya kita belum bisa ngerayain ulang tahun lu bareng, juga belum bisa ngasih apa-apa selain ini. Tapi
                 di sini kita juga tetep ngerayain lu kok, walaupun jauh.</p>
             <p>Makasih ya udah jadi kakak yang baik selama ini. Semoga lu selalu sehat, bahagia, dan semua yang lu
                 pengenin bisa pelan-pelan tercapai 🤍"</p>
+            <p> — Adek lu</p>
 
             <button id="closeMsg" class="close-msg-btn">Tutup Pesan</button>
         </div>
@@ -731,10 +888,13 @@ So proud of you, Pin.`,
         function handlePhotoInteraction(index, element) {
             if (hint) hint.style.opacity = "0";
 
-            // Reset foto lain biar gak numpuk pas di-zoom
+            // Jika foto yang diklik sudah aktif, jangan lakukan apa-apa lagi
+            if (element.classList.contains('active-photo')) return;
+
+            // Reset foto lain
             polaroids.forEach(photo => photo.classList.remove('active-photo'));
 
-            // Aktifkan zoom di foto yang diklik
+            // Aktifkan zoom
             element.classList.add('active-photo');
 
             quoteContainer.innerHTML = '';
@@ -745,9 +905,16 @@ So proud of you, Pin.`,
 
             clickedPhotos.add(index);
             if (clickedPhotos.size === polaroids.length) {
-                // Tetap pakai jeda 5 detik sesuai keinginanmu
                 setTimeout(showGiftButton, 5000);
             }
+
+            // --- LOGIKA TOMBOL CLOSE ---
+            const closeBtn = element.querySelector('.close-photo-btn');
+            closeBtn.onclick = (e) => {
+                e.stopPropagation(); // Biar klik tombol gak dianggap klik foto lagi
+                element.classList.remove('active-photo');
+                quoteContainer.innerHTML = ''; // Hapus teks quote saat ditutup
+            };
         }
 
         function showGiftButton() {
@@ -793,40 +960,48 @@ So proud of you, Pin.`,
             })
         });
 
-        // Klik Tombol ON TV
+        // Klik Tombol ON TV (Ganti satu blok ini ya)
         document.getElementById('tvOnBtn').addEventListener('click', function () {
             let btn = this;
             let v = document.getElementById('myVideo');
             let flash = document.getElementById('tv-flash');
+            const music = document.getElementById('bgMusic'); // <--- 1. Ambil musiknya
 
             btn.innerText = "...";
             btn.style.pointerEvents = "none";
 
-            // 1. Munculkan garis kilatan ✨
+            // --- 2. LOGIKA FADE DOWN (Mengecilkan suara pelan-pelan) ---
+            let fadeDownMusic = setInterval(() => {
+                if (music.volume > 0.15) {
+                    music.volume -= 0.05;
+                } else {
+                    music.volume = 0.2; // Berhenti di volume 0.1 (jadi backsound)
+                    clearInterval(fadeDownMusic);
+                }
+            }, 100);
+
+            // 1. Munculkan garis kilatan ✨ (Tetap sama)
             setTimeout(() => {
                 flash.classList.add('active');
             }, 500);
 
-            // 2. Hilangkan garis, lalu mulai jitter
+            // 2. Hilangkan garis, lalu mulai jitter (Tetap sama)
             setTimeout(() => {
                 flash.classList.remove('active');
                 flash.style.opacity = "0";
 
-                // Mulai Jitter (Semut TV)
                 let jitter = setInterval(() => {
                     tvStatic.style.opacity = Math.random();
                 }, 50);
 
-                // 3. FINAL: TV Nyala & Video Fade In
+                // 3. FINAL: TV Nyala & Video Fade In (Tetap sama)
                 setTimeout(() => {
                     clearInterval(jitter);
                     tvStatic.style.display = 'none';
 
-                    // --- PROSES FADE IN VIDEO DI SINI ---
                     v.style.display = 'block';
                     v.play();
 
-                    // Delay dikit biar transition-nya jalan
                     setTimeout(() => {
                         v.style.transition = "opacity 2s ease";
                         v.style.opacity = "1";
@@ -835,11 +1010,13 @@ So proud of you, Pin.`,
                     btn.style.backgroundColor = '#4caf50';
                     btn.innerText = "OFF";
                     btn.style.pointerEvents = "auto";
-                    document.getElementById('bgMusic').volume = 0.2;
 
-                }, 2000); // Durasi jitter (2 detik)
+                    // --- 3. Kunci volumenya tetap di 0.1 ---
+                    music.volume = 0.2;
 
-            }, 1300); // Garis putih ✨ muncul selama 0.8 detik (1300 - 500)
+                }, 2000);
+
+            }, 1300);
         });
 
         // Klik Close
@@ -849,7 +1026,15 @@ So proud of you, Pin.`,
             video.pause();
 
             const music = document.getElementById('bgMusic');
-            music.volume = 0.9;
+
+            let fadeInMusic = setInterval(() => {
+                if (music.volume < 0.9) {
+                    music.volume += 0.5;
+                } else {
+                    music.volume = 0.9;
+                    clearInterval(fadeInMusic);
+                }
+            }, 100);
 
             msg.style.display = 'block';
         });
@@ -879,6 +1064,61 @@ So proud of you, Pin.`,
             .addEventListener('click', () => {
                 msg.style.display = 'none';
             });
+
+        // Ganti tanggal ini sesuai hari-H ultahnya
+        const targetDate = new Date("April 12, 2026 00:01:00").getTime();
+
+        const countdownFunc = setInterval(function () {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Elemen-elemen yang mau diubah
+            const gate = document.getElementById('mailbox-gate');
+            const img = document.getElementById('mailbox-img');
+            const status = document.getElementById('mailbox-status');
+            const timer = document.getElementById('countdown-timer');
+
+            if (distance > 0) {
+                // HITUNG MUNDUR (MASIH TERTUTUP)
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timer.innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+            } else {
+                // SUDAH HARI-H (MAILBOX TERBUKA)
+                clearInterval(countdownFunc);
+
+                // Kasih jeda 1.5 detik setelah timer habis baru mailbox terbuka
+                setTimeout(() => {
+                    timer.style.display = 'none';
+
+                    // Tetap pakai font mesin tik sesuai request-mu
+                    status.innerText = "Archives collected, please click the mailbox to take it";
+                    status.style.fontFamily = "'Special Elite', serif";
+
+                    img.src = "mailbox-buka.png";
+                    img.style.cursor = "pointer";
+
+                    // Tambahkan animasi "unlocked" atau sedikit membesar biar tahu kalau bisa diklik
+                    img.style.transform = "scale(1.1)";
+                }, 1500); // Jeda transisi ke mode terbuka
+
+                // Fungsi klik buat masuk ke halaman surat
+                img.onclick = function () {
+                    // Kasih delay dikit pas diklik baru mulai fade out
+                    setTimeout(() => {
+                        gate.style.opacity = "0";
+                        gate.style.pointerEvents = "none";
+
+                        setTimeout(() => {
+                            gate.style.display = "none";
+                        }, 2500); // Waktu memudar total (aku lamain jadi 2.5 detik)
+                    }, 500); // Jeda setelah klik sebelum mulai menghilang
+                };
+            }
+        }, 1000);
     </script>
 </body>
 
