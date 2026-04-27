@@ -1003,11 +1003,16 @@ So proud of you, Pin.`,
                     clearInterval(jitter);
                     tvStatic.style.display = 'none';
 
-                    // Munculkan Container IFrame
                     container.style.display = 'block';
 
-                    // Trik Play YouTube: Kirim perintah play lewat postMessage
+                    // 1. Play Video
                     ytPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+
+                    // 2. UNMUTE Video (Biar suaranya muncul otomatis)
+                    ytPlayer.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+
+                    // 3. Set Volume (Opsional, misal mau set ke 80%)
+                    ytPlayer.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[80]}', '*');
 
                     setTimeout(() => {
                         container.style.transition = "opacity 2s ease";
@@ -1017,7 +1022,7 @@ So proud of you, Pin.`,
                     btn.style.backgroundColor = '#4caf50';
                     btn.innerText = "OFF";
                     btn.style.pointerEvents = "auto";
-                    music.volume = 0.2;
+                    music.volume = 0.2; // Musik latar mengecil, suara video YT terdengar
 
                 }, 2000);
             }, 1300);
