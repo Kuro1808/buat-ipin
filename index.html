@@ -790,9 +790,10 @@
 
                     <div id="videoContainer" style="width:100%; height:100%; display:none; opacity:0;">
                         <iframe id="ytPlayer" width="100%" height="100%"
-                            src="https://www.youtube.com/embed/PoVpOnZWEV8?enablejsapi=1&rel=0&controls=0&showinfo=0&autoplay=1&mute=1"
-                            frameborder="0" allow="autoplay; encrypted-media" style="object-fit: cover;">
-                        </iframe>
+    src="https://www.youtube.com/embed/PoVpOnZWEV8?enablejsapi=1&rel=0&controls=0&showinfo=0&mute=1"
+    frameborder="0" allow="autoplay; encrypted-media" style="object-fit: cover;">
+</iframe>
+
                     </div>
                 </div>
                 <div class="tv-controls">
@@ -1004,21 +1005,24 @@ Tempat buat kita pulang, dan alasan buat kita tetep bareng.`
                     tvStatic.style.opacity = Math.random();
                 }, 50);
 
-                // 3. FINAL: Play YouTube & Fade In
+                                // 3. FINAL: Play YouTube & Fade In
                 setTimeout(() => {
                     clearInterval(jitter);
                     tvStatic.style.display = 'none';
 
                     container.style.display = 'block';
 
-                    // 1. Play Video
-                    ytPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    // --- KODE BARU DI SINI ---
+                    // Memaksa iframe memuat ulang video dengan tambahan perintah autoplay tepat saat TV ON
+                    ytPlayer.src = "https://www.youtube.com/embed/PoVpOnZWEV8?enablejsapi=1&rel=0&controls=0&showinfo=0&mute=1&autoplay=1";
 
-                    // 2. UNMUTE Video (Biar suaranya muncul otomatis)
-                    ytPlayer.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-
-                    // 3. Set Volume (Opsional, misal mau set ke 80%)
-                    ytPlayer.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[80]}', '*');
+                    // Kasih jeda super pendek (200ms) agar iframe sempat memproses link baru, lalu trigger suaranya
+                    setTimeout(() => {
+                        ytPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                        ytPlayer.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+                        ytPlayer.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[80]}', '*');
+                    }, 200);
+                    // -------------------------
 
                     setTimeout(() => {
                         container.style.transition = "opacity 2s ease";
@@ -1031,7 +1035,7 @@ Tempat buat kita pulang, dan alasan buat kita tetep bareng.`
                     music.volume = 0.02; // Musik latar mengecil, suara video YT terdengar
 
                 }, 2000);
-            }, 1300);
+
         });
 
 
